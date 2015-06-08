@@ -351,6 +351,12 @@ $signPackage = $jssdk->GetSignPackage();
         <a class="btn btn7"><img src="img/btn12.png" alt=""/></a>
         <a class="btn btn8"><img src="img/btn15.png" alt=""/></a>
         <a class="btn btn4"><img src="img/btn10.png" alt=""/></a>
+        <img class="tip tip5" src="img/tip6.png" alt=""/>
+        <div class="tip tip6">
+            <a class="btn btn9"><img src="img/btn18.png" alt=""/></a>
+        </div>
+        <img class="tip tip7" src="img/tip9.jpg" alt=""/>
+        <a class="btn btn4"><img src="img/btn10.png" alt=""/></a>
     </div>
     <!--  高校颜值排行-->
     <div class="tip tip4">
