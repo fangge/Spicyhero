@@ -780,9 +780,10 @@ $signPackage = $jssdk->GetSignPackage();
                 $('.login').removeClass('on');
                 var check_chances = data.can_check_chances;
                 var share_chances = data.share_chances;
-                submitFaceValue(p,s,score);
+
                 if(check_chances>0){
                     //判断领红包次数
+                    submitFaceValue(p,s,score);
                     getRewardTimes(p);
                 }else{
                     if(share_chances>0){
