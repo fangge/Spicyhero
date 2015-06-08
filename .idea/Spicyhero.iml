@@ -7,23 +7,12 @@
     <orderEntry type="module-library">
       <library name="PHP">
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../php" />
+          <root url="file://$MODULE_DIR$/../../../php/pear" />
         </CLASSES>
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../../php" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="PHARS">
-        <CLASSES>
-          <root url="phar://$MODULE_DIR$/../../php/pharcommand.phar" />
-        </CLASSES>
-        <SOURCES>
-          <root url="phar://$MODULE_DIR$/../../php/pharcommand.phar" />
+          <root url="file://$MODULE_DIR$/../../../php/pear" />
         </SOURCES>
       </library>
     </orderEntry>
   </component>
 </module>
-

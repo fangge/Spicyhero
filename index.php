@@ -1,8 +1,8 @@
 ﻿<?php
 /**
  * Created by MrF.
- * Date: 2015/6/1
- * Time: 22:33
+ * Date: 2015/6/8
+ * Time: 20:38
  */
 header("Content-type:text/html;charset=utf-8");
 //上传文件类型列表
@@ -19,10 +19,10 @@ $max_file_size=3000000;     //上传文件大小限制, 单位BYTE
 $destination_folder="uploads/"; //上传文件路径
 $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if (!is_uploaded_file($_FILES["upfile"]["tmp_name"])){
+    $file = $_FILES["upfile"];
+    if (!is_uploaded_file($file["tmp_name"])){
         echo "<script>alert('图片不存在!');window.location.href='index.php';</script>";exit;
     }
-    $file = $_FILES["upfile"];
     if($max_file_size < $file["size"]){
         echo "<script>alert('文件太大，请换一张图片');window.location.href='index.php';</script>";exit;
     }
@@ -38,14 +38,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $pinfo=pathinfo($file["name"]);
     $ftype=$pinfo['extension'];
     $destination = $destination_folder.time().".".$ftype;
+    $destination2 = $destination_folder.time()."_thumb.".$ftype;
     if (file_exists($destination) && $overwrite != true){
         echo "<script>alert('同名文件已经存在了');window.location.href='index.php';</script>";exit;
     }
     if(!move_uploaded_file ($filename, $destination)){
         echo "<script>alert('移动文件出错');window.location.href='index.php';</script>";exit;
     }
+    require 'imgthumb.class.php';
+    $resizeimage2 = new resizeimage($destination, 65, 70, "1",$destination2);
+
     if ($file["size"]>3000000){
-        require 'imgthumb.class.php';
         $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
     }
 }
@@ -811,7 +814,7 @@ $signPackage = $jssdk->GetSignPackage();
         var p = phoneNum;
         var s = schoolName;
         var pf = personFaceValue;
-        var data = "{'person_id':'"+p+"','person_face_value':'"+pf+"','img_url':'<?php echo $destination;?>'}";
+        var data = "{'person_id':'"+p+"','person_face_value':'"+pf+"','img_url':'<?php echo $destination2;?>'}";
         $.ajax({
             type:"GET",
             dataType:"json",
