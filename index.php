@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/com.css"/>
+    <link rel="stylesheet" href="css/com.css?20150608"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script>
@@ -509,6 +509,7 @@ $signPackage = $jssdk->GetSignPackage();
     var link,link2;
     var title = $('#share-title').text();
     var imgUrl = $('#share-img').text();
+    var storage = window.localStorage;
     //65-98
     var max=100;
     var min =28;
@@ -541,7 +542,7 @@ $signPackage = $jssdk->GetSignPackage();
     }
     $('#des').html('').text(desc);
     link = "http://party.mlyx.syyx.com/result.html?score="+score+"&pic="+"http://party.mlyx.syyx.com/<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
-    if (!storage.getItem("personFaceValueTotalLocal")){
+    if (storage.getItem("personFaceValueTotalLocal")){
         var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
         link2 = link + person_link;
         wx.ready(function () {
@@ -727,7 +728,6 @@ $signPackage = $jssdk->GetSignPackage();
         })
 
         //判断用户是否二次登陆
-        var storage = window.localStorage;
 
         $('#btn5').on('click',function(){
 
