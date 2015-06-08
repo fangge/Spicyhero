@@ -541,65 +541,152 @@ $signPackage = $jssdk->GetSignPackage();
     }
     $('#des').html('').text(desc);
     link = "http://party.mlyx.syyx.com/result.html?score="+score+"&pic="+"http://party.mlyx.syyx.com/<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
-    //    link2 == null? link2 ="http://party.mlyx.syyx.com/index.php":link2=link2;
-    wx.ready(function () {
-        wx.onMenuShareAppMessage({
-            title: "麻辣颜值大比拼",
-            desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-            link: "http://party.mlyx.syyx.com/index.php",
-            imgUrl: imgUrl,
-            trigger: function () {
-                //alert('用户点击发送给朋友');
-            },
-            success: function () {
-                //alert('已分享');
-            },
-            cancel: function () {
-                //alert('已取消');
-            }
+    if (!storage.getItem("personFaceValueTotalLocal")){
+        var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
+        link2 = link + person_link;
+        wx.ready(function () {
+            wx.onMenuShareAppMessage({
+                title: title,
+                desc: "我的颜值是"+score+"分, "+desc,
+                link: link2,
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击发送给朋友');
+                },
+                success: function () {
+                    //alert('已分享');
+                    var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                        success:function(data){
+                            //alert('第1次分享,获得9次测颜值机会');
+                        },
+                        error:function(){
+                            alert('服务器故障，请稍后...')
+                        }
+                    })
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareTimeline({
+                link:link2,
+                title: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击分享到朋友圈');
+                },
+                success: function () {
+                    //alert('已分享');
+                    var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                        success:function(data){
+                            //alert('第1次分享,获得9次测颜值机会');
+                        },
+                        error:function(){
+                            alert('服务器故障，请稍后...')
+                        }
+                    })
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareQQ({
+                title: title,
+                link: link2,
+                desc: "我的颜值是"+score+"分, "+desc,
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            wx.onMenuShareWeibo({
+                title: title,
+                link: link2,
+                desc: "我的颜值是"+score+"分, "+desc,
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
         });
-        wx.onMenuShareTimeline({
-            title: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-            link: "http://party.mlyx.syyx.com/index.php",
-            imgUrl: imgUrl,
-            trigger: function () {
-                //alert('用户点击分享到朋友圈');
-            },
-            success: function () {
-                //alert('已分享');
-            },
-            cancel: function () {
-                //alert('已取消');
-            }
+        wx.error(function(res){
+            //alert(res);
         });
-        wx.onMenuShareQQ({
-            title: "麻辣颜值大比拼",
-            desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-            link: "http://party.mlyx.syyx.com/index.php",
-            imgUrl: imgUrl,
-            success: function () {
-                // 用户确认分享后执行的回调函数
-            },
-            cancel: function () {
-                // 用户取消分享后执行的回调函数
-            }
+    }else{
+        wx.ready(function () {
+            wx.onMenuShareAppMessage({
+                title: "麻辣颜值大比拼",
+                desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                link: "http://party.mlyx.syyx.com/index.php",
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击发送给朋友');
+                },
+                success: function () {
+                    //alert('已分享');
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareTimeline({
+                title: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                link: "http://party.mlyx.syyx.com/index.php",
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击分享到朋友圈');
+                },
+                success: function () {
+                    //alert('已分享');
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareQQ({
+                title: "麻辣颜值大比拼",
+                desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                link: "http://party.mlyx.syyx.com/index.php",
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            wx.onMenuShareWeibo({
+                title: "麻辣颜值大比拼",
+                desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                link: "http://party.mlyx.syyx.com/index.php",
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
         });
-        wx.onMenuShareWeibo({
-            title: "麻辣颜值大比拼",
-            desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-            link: "http://party.mlyx.syyx.com/index.php",
-            imgUrl: imgUrl,
-            success: function () {
-                // 用户确认分享后执行的回调函数
-            },
-            cancel: function () {
-                // 用户取消分享后执行的回调函数
-            }
+        wx.error(function(res){
+            //alert(res);
         });
-    });
-    wx.error(function(res){
-        //alert(res);
-    });
+    }
+
 
     $(function(){
         $('.tip').on('click',function(){
