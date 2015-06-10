@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     require 'imgthumb.class.php';
     $resizeimage2 = new resizeimage($destination, 65, 70, "1",$destination2);
 
-    if ($file["size"]>3000000){
-        $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
-    }
+//    if ($file["size"]>3000000){
+//        $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
+//    }
 }
 ?>
 

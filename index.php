@@ -34,6 +34,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 
     $filename=$file["tmp_name"];
+    $exif = exif_read_data($filename);
+    if(!empty($exif['Orientation'])) {
+        switch($exif['Orientation']) {
+            case 8:
+                $image = imagerotate($image,90,0);
+                break;
+            case 3:
+                $image = imagerotate($image,180,0);
+                break;
+            case 6:
+                $image = imagerotate($image,-90,0);
+                break;
+        }
+    }
     $image_size = getimagesize($filename);
     $pinfo=pathinfo($file["name"]);
     $ftype=$pinfo['extension'];
@@ -48,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     require 'imgthumb.class.php';
     $resizeimage2 = new resizeimage($destination, 65, 70, "1",$destination2);
 
-    if ($file["size"]>3000000){
-        $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
-    }
+//    if ($file["size"]>3000000){
+//        $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
+//    }
 }
 ?>
 
