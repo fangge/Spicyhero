@@ -69,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <link rel="stylesheet" href="css/comv2.css"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="sapp.js" type="text/javascript"></script>
-    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -84,13 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <div style="display: none"><img src="http://party.mlyx.syyx.com/img/share.jpg" alt=""/></div>
 <!--上传前-->
 <?php if (!($_SERVER['REQUEST_METHOD'] == 'POST')){?>
-    <!-- 分享内容 start-->
-    <div style="display: none">
-        <div id="share-title">麻辣颜值大比拼</div>
-        <div id="share-des">刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！</div>
-        <div id="share-img">http://party.mlyx.syyx.com/img/share.jpg</div>
-
-    </div>
     <!-- 分享内容 end-->
     <div class="in" id="loading">
         <div class="floatingCirclesG">
@@ -121,15 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <img class="btn upload" src="img/btn2.png"/>
         <form enctype="multipart/form-data" method="post" name="upform"><input id="uploadInput" name="upfile" type="file"  capture="camera" accept="image/*" class="chuan btn" onchange="upform.submit()" /></form>
     </div>
-<?php
-$appid = "wx445c5cd15c5d5184";
-$secret = "4eda327bb6828478a1340b148ad46662";
 
-require_once "jssdk.php";
-
-$jssdk = new JSSDK($appid, $secret);
-$signPackage = $jssdk->GetSignPackage();
-?>
     <script type="text/javascript">
         sapp.fill({
             target : ".wrap,.tip",
@@ -142,76 +126,7 @@ $signPackage = $jssdk->GetSignPackage();
         var link = window.location.href;
         var imgUrl = $('#share-img').text();
 
-        wx.config({
-            appId: '<?php echo $signPackage["appId"];?>',
-            timestamp: <?php echo $signPackage["timestamp"];?>,
-            nonceStr: '<?php echo $signPackage["nonceStr"];?>',
-            signature: '<?php echo $signPackage["signature"];?>',
-            jsApiList: [
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo'
-            ]
-        });
-        wx.ready(function () {
-            wx.onMenuShareAppMessage({
-                title: title,
-                desc: desc,
-                link: link,
-                imgUrl: imgUrl,
-                trigger: function () {
-                    //alert('用户点击发送给朋友');
-                },
-                success: function () {
-                    //alert('已分享');
-                },
-                cancel: function () {
-                    //alert('已取消');
-                }
-            });
-            wx.onMenuShareTimeline({
-                title: desc,
-                link: link,
-                imgUrl: imgUrl,
-                trigger: function () {
-                    //alert('用户点击分享到朋友圈');
-                },
-                success: function () {
-                    //alert('已分享');
-                },
-                cancel: function () {
-                    //alert('已取消');
-                }
-            });
-            wx.onMenuShareQQ({
-                title: title,
-                link: link,
-                desc: desc,
-                imgUrl: imgUrl,
-                success: function () {
-                    // 用户确认分享后执行的回调函数
-                },
-                cancel: function () {
-                    // 用户取消分享后执行的回调函数
-                }
-            });
-            wx.onMenuShareWeibo({
-                title: title,
-                link: link,
-                desc: desc,
-                imgUrl: imgUrl,
-                success: function () {
-                    // 用户确认分享后执行的回调函数
-                },
-                cancel: function () {
-                    // 用户取消分享后执行的回调函数
-                }
-            });
-        });
-        wx.error(function(res){
-            //alert(res);
-        });
+
         $(window).on("load", function(){
             //loading
             $("#loading").removeClass("in");
@@ -305,10 +220,10 @@ $signPackage = $jssdk->GetSignPackage();
             <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>
             <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>
         </div>
-        <div class="tip tip13">
-            <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>
-            <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>
-        </div>
+<!--        <div class="tip tip13">-->
+<!--            <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>-->
+<!--            <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>-->
+<!--        </div>-->
     </div>
     <!--    6.17以前-->
     <div class="wrap wrap5">
@@ -486,15 +401,7 @@ $signPackage = $jssdk->GetSignPackage();
     <!--<div class="wrap wrap5_2">-->
     <!---->
     <!--</div>-->
-<?php
-$appid = "wx445c5cd15c5d5184";
-$secret = "4eda327bb6828478a1340b148ad46662";
 
-require_once "jssdk.php";
-
-$jssdk = new JSSDK($appid, $secret);
-$signPackage = $jssdk->GetSignPackage();
-?>
     <script type="text/javascript">
         sapp.fill({
             target : ".wrap,.tip",
@@ -507,21 +414,9 @@ $signPackage = $jssdk->GetSignPackage();
             $("#loading").removeClass("in");
             $('.wrap3').addClass("in");
         });
-        wx.config({
-            appId: '<?php echo $signPackage["appId"];?>',
-            timestamp: <?php echo $signPackage["timestamp"];?>,
-            nonceStr: '<?php echo $signPackage["nonceStr"];?>',
-            signature: '<?php echo $signPackage["signature"];?>',
-            jsApiList: [
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo'
-            ]
-        });
+
 
         var desc,tArrary,hongbaoValue;
-        var link,link2;
         var title = $('#share-title').text();
         var imgUrl = $('#share-img').text();
         var storage = window.localStorage;
@@ -556,156 +451,6 @@ $signPackage = $jssdk->GetSignPackage();
             hongbaoValue = 3;
         }
         $('#des').html('').text(desc);
-        link = "http://party.mlyx.syyx.com/result.html2?score="+score+"&pic="+"http://party.mlyx.syyx.com/<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
-        if (storage.getItem("personFaceValueTotalLocal")){
-            var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
-            link2 = link + person_link;
-            wx.ready(function () {
-                wx.onMenuShareAppMessage({
-                    title: title,
-                    desc: "我的颜值是"+score+"分, "+desc,
-                    link: link2,
-                    imgUrl: imgUrl,
-                    trigger: function () {
-                        //alert('用户点击发送给朋友');
-                    },
-                    success: function () {
-                        //alert('已分享');
-                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
-                        $.ajax({
-                            type:"GET",
-                            dataType:"json",
-                            url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
-                            success:function(data){
-                                //alert('第1次分享,获得9次测颜值机会');
-                                window.location.href='http://party.mlyx.syyx.com/index_device-width.php';
-                                //alert('分享成功！请刷新页面');
-                            },
-                            error:function(){
-                                alert('服务器故障，请稍后...')
-                            }
-                        })
-                    },
-                    cancel: function () {
-                        //alert('已取消');
-                    }
-                });
-                wx.onMenuShareTimeline({
-                    link:link2,
-                    title: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
-                    imgUrl: imgUrl,
-                    trigger: function () {
-                        //alert('用户点击分享到朋友圈');
-                    },
-                    success: function () {
-                        //alert('已分享');
-                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
-                        $.ajax({
-                            type:"GET",
-                            dataType:"json",
-                            url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
-                            success:function(data){
-                                //alert('第1次分享,获得9次测颜值机会');
-                                window.location.href='http://party.mlyx.syyx.com/index_device-width.php';
-                            },
-                            error:function(){
-                                alert('服务器故障，请稍后...')
-                            }
-                        })
-                    },
-                    cancel: function () {
-                        //alert('已取消');
-                    }
-                });
-                wx.onMenuShareQQ({
-                    title: title,
-                    link: link2,
-                    desc: "我的颜值是"+score+"分, "+desc,
-                    imgUrl: imgUrl,
-                    success: function () {
-                        // 用户确认分享后执行的回调函数
-                    },
-                    cancel: function () {
-                        // 用户取消分享后执行的回调函数
-                    }
-                });
-                wx.onMenuShareWeibo({
-                    title: title,
-                    link: link2,
-                    desc: "我的颜值是"+score+"分, "+desc,
-                    imgUrl: imgUrl,
-                    success: function () {
-                        // 用户确认分享后执行的回调函数
-                    },
-                    cancel: function () {
-                        // 用户取消分享后执行的回调函数
-                    }
-                });
-            });
-            wx.error(function(res){
-                //alert(res);
-            });
-        }else{
-            wx.ready(function () {
-                wx.onMenuShareAppMessage({
-                    title: "麻辣颜值大比拼",
-                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                    link: "http://party.mlyx.syyx.com/index_device-width.php",
-                    imgUrl: imgUrl,
-                    trigger: function () {
-                        //alert('用户点击发送给朋友');
-                    },
-                    success: function () {
-                        //alert('已分享');
-                    },
-                    cancel: function () {
-                        //alert('已取消');
-                    }
-                });
-                wx.onMenuShareTimeline({
-                    title: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                    link: "http://party.mlyx.syyx.com/index_device-width.php",
-                    imgUrl: imgUrl,
-                    trigger: function () {
-                        //alert('用户点击分享到朋友圈');
-                    },
-                    success: function () {
-                        //alert('已分享');
-                    },
-                    cancel: function () {
-                        //alert('已取消');
-                    }
-                });
-                wx.onMenuShareQQ({
-                    title: "麻辣颜值大比拼",
-                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                    link: "http://party.mlyx.syyx.com/index_device-width.php",
-                    imgUrl: imgUrl,
-                    success: function () {
-                        // 用户确认分享后执行的回调函数
-                    },
-                    cancel: function () {
-                        // 用户取消分享后执行的回调函数
-                    }
-                });
-                wx.onMenuShareWeibo({
-                    title: "麻辣颜值大比拼",
-                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                    link: "http://party.mlyx.syyx.com/index_device-width.php",
-                    imgUrl: imgUrl,
-                    success: function () {
-                        // 用户确认分享后执行的回调函数
-                    },
-                    cancel: function () {
-                        // 用户取消分享后执行的回调函数
-                    }
-                });
-            });
-            wx.error(function(res){
-                //alert(res);
-            });
-        }
-
 
         $(function(){
             $('.tip').on('click',function(){
@@ -809,11 +554,12 @@ $signPackage = $jssdk->GetSignPackage();
                         if(share_chances>0){
                             //所有次数都用完
                             $('.tip12').addClass('on')
-                        }else{
-                            //未分享还可以有次数
-                            $('.tip13').addClass('on')
-
                         }
+//                        else{
+//                            //未分享还可以有次数
+//                            $('.tip13').addClass('on')
+//
+//                        }
                     }
                 },
                 error:function(){
@@ -851,92 +597,6 @@ $signPackage = $jssdk->GetSignPackage();
                     localStorage.personFaceValueTotalLocal = personFaceValueTotal;
                     localStorage.personFaceRanking = personFaceRanking;
                     localStorage.schoolFaceRanking = schoolFaceRanking;
-                    var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
-                    link2 = link + person_link;
-                    wx.ready(function () {
-                        wx.onMenuShareAppMessage({
-                            title: title,
-                            desc: "我的颜值是"+score+"分, "+desc,
-                            link: link2,
-                            imgUrl: imgUrl,
-                            trigger: function () {
-                                //alert('用户点击发送给朋友');
-                            },
-                            success: function () {
-                                //alert('已分享');
-                                var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
-                                $.ajax({
-                                    type:"GET",
-                                    dataType:"json",
-                                    url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
-                                    success:function(data){
-                                        //alert('第1次分享,获得9次测颜值机会');
-                                        window.location.href='http://party.mlyx.syyx.com/index_device-width.php';
-                                    },
-                                    error:function(){
-                                        alert('服务器故障，请稍后...')
-                                    }
-                                })
-                            },
-                            cancel: function () {
-                                //alert('已取消');
-                            }
-                        });
-                        wx.onMenuShareTimeline({
-                            link:link2,
-                            title: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
-                            imgUrl: imgUrl,
-                            trigger: function () {
-                                //alert('用户点击分享到朋友圈');
-                            },
-                            success: function () {
-                                //alert('已分享');
-                                var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
-                                $.ajax({
-                                    type:"GET",
-                                    dataType:"json",
-                                    url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
-                                    success:function(data){
-                                        //alert('第1次分享,获得9次测颜值机会');
-                                        window.location.href='http://party.mlyx.syyx.com/index_device-width.php';
-                                    },
-                                    error:function(){
-                                        alert('服务器故障，请稍后...')
-                                    }
-                                })
-                            },
-                            cancel: function () {
-                                //alert('已取消');
-                            }
-                        });
-                        wx.onMenuShareQQ({
-                            title: title,
-                            link: link2,
-                            desc: "我的颜值是"+score+"分, "+desc,
-                            imgUrl: imgUrl,
-                            success: function () {
-                                // 用户确认分享后执行的回调函数
-                            },
-                            cancel: function () {
-                                // 用户取消分享后执行的回调函数
-                            }
-                        });
-                        wx.onMenuShareWeibo({
-                            title: title,
-                            link: link2,
-                            desc: "我的颜值是"+score+"分, "+desc,
-                            imgUrl: imgUrl,
-                            success: function () {
-                                // 用户确认分享后执行的回调函数
-                            },
-                            cancel: function () {
-                                // 用户取消分享后执行的回调函数
-                            }
-                        });
-                    });
-                    wx.error(function(res){
-                        //alert(res);
-                    });
                 },
                 error:function(){
                     alert('服务器故障2，请稍后...')
