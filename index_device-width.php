@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Created by MrF.
  * Date: 2015/6/8
@@ -15,7 +15,7 @@ $uptypes=array(
     'image/bmp',
     'image/x-png'
 );
-$max_file_size=3000000;     //上传文件大小限制, 单位BYTE
+$max_file_size=5000000;     //上传文件大小限制, 单位BYTE
 $destination_folder="uploads/"; //上传文件路径
 $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -69,6 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <link rel="stylesheet" href="css/comv2.css"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="sapp.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var service_url = "http://party.mlyx.syyx.com:8080/";
+    </script>
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -83,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <div style="display: none"><img src="http://party.mlyx.syyx.com/img/share.jpg" alt=""/></div>
 <!--上传前-->
 <?php if (!($_SERVER['REQUEST_METHOD'] == 'POST')){?>
-    <!-- 分享内容 end-->
     <div class="in" id="loading">
         <div class="floatingCirclesG">
             <div class="f_circleG" id="frotateG_01">
@@ -417,6 +419,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
         var desc,tArrary,hongbaoValue;
+        //var link,link2;
         var title = $('#share-title').text();
         var imgUrl = $('#share-img').text();
         var storage = window.localStorage;
@@ -495,18 +498,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $('#btn5').on('click',function(){
 
                 if (!storage.getItem("pageLoadCount")) {//若为初次登陆
-                    storage.setItem("pageLoadCount",0);
+                    storage.setItem("pageLoadCount",1);
                     //打开登陆弹层
                     $('.login').addClass('on');
 
                 }else{//若为二次登陆
                     storage.pageLoadCount = parseInt(storage.getItem("pageLoadCount")) + 1;
                     if(storage.getItem("phoneNum") && storage.getItem("schoolName")){
-                        storage.phoneNum = storage.getItem("phoneNum");
-                        storage.schoolName = storage.getItem("schoolName");
-                        var phoneNum = storage.phoneNum;
-                        var schoolName = storage.schoolName
+                        //storage.phoneNum = storage.getItem("phoneNum");
+                        //storage.schoolName = storage.getItem("schoolName");
+                        var phoneNum = parseInt(storage.getItem("phoneNum"));
+                        var schoolName = storage.getItem("schoolName");
                         submitPhone(phoneNum,schoolName)
+                    }else{
+                        alert('获取用户信息失败！请重试');
+                        localStorage.clear();
+                        window.location.href='index_device-width.php'; //index_device-width.php
                     }
                 }
             })
@@ -538,7 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/submit_person.ashx?data="+encodeURIComponent(data),
+                url:service_url+"submit_person.ashx?data="+encodeURIComponent(data),
                 success:function(data){
                     $('.login').removeClass('on');
                     if(data != null){
@@ -581,7 +588,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/submit_facevalue.ashx?data="+encodeURIComponent(data),
+                url:service_url+"submit_facevalue.ashx?data="+encodeURIComponent(data),
                 success:function(data){
                     var personFaceValueTotal = data.person_face_value;
                     var canCheckChancesNew = data.can_check_chances;
@@ -612,7 +619,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/get_isenable_hongbao.ashx?data="+encodeURIComponent(data),
+                url:service_url+"get_isenable_hongbao.ashx?data="+encodeURIComponent(data),
                 success:function(data){
                     if(data != null){
                         if(data.hongbao_chances > 0){
@@ -636,7 +643,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/get_hongbao.ashx?data="+encodeURIComponent(data),
+                url:service_url+"get_hongbao.ashx?data="+encodeURIComponent(data),
                 success:function(data){
                     if(data != null){
                         var carNo = data.hongbao_cardNo;
@@ -677,7 +684,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/get_personage_ranking.ashx",
+                url:service_url+"get_personage_ranking.ashx",
                 success:function(data){
                     $("#personage_ranking_html").html("");
                     $.each(data,function(i){
@@ -696,7 +703,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:"http://party.mlyx.syyx.com/get_school_ranking.ashx",
+                url:service_url+"get_school_ranking.ashx",
                 success:function(data){
                     $("#school_ranking_html").html("");
                     $.each(data,function(i){

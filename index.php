@@ -15,7 +15,7 @@ $uptypes=array(
     'image/bmp',
     'image/x-png'
 );
-$max_file_size=3000000;     //上传文件大小限制, 单位BYTE
+$max_file_size=5000000;     //上传文件大小限制, 单位BYTE
 $destination_folder="uploads/"; //上传文件路径
 $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -34,20 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 
     $filename=$file["tmp_name"];
-    $exif = exif_read_data($filename);
-    if(!empty($exif['Orientation'])) {
-        switch($exif['Orientation']) {
-            case 8:
-                $image = imagerotate($image,90,0);
-                break;
-            case 3:
-                $image = imagerotate($image,180,0);
-                break;
-            case 6:
-                $image = imagerotate($image,-90,0);
-                break;
-        }
-    }
     $image_size = getimagesize($filename);
     $pinfo=pathinfo($file["name"]);
     $ftype=$pinfo['extension'];
@@ -83,6 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <link rel="stylesheet" href="css/com.css?20150608"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+        var service_url = "http://party.mlyx.syyx.com:8080/";
+    </script>
     <script>
         var _hmt = _hmt || [];
         (function() {
@@ -172,6 +161,22 @@ $signPackage = $jssdk->GetSignPackage();
                 },
                 success: function () {
                     //alert('已分享');
+                    if(localStorage.phoneNum != null){
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                //window.location.href=service_url+'index.php';
+                                alert('分享成功！');
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    }
                 },
                 cancel: function () {
                     //alert('已取消');
@@ -186,6 +191,22 @@ $signPackage = $jssdk->GetSignPackage();
                 },
                 success: function () {
                     //alert('已分享');
+                    if(localStorage.phoneNum != null){
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                //window.location.href=service_url+'index.php';
+                                alert('分享成功！');
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    }
                 },
                 cancel: function () {
                     //alert('已取消');
@@ -558,7 +579,7 @@ $signPackage = $jssdk->GetSignPackage();
         hongbaoValue = 3;
     }
     $('#des').html('').text(desc);
-    link = "http://party.mlyx.syyx.com/result.html?score="+score+"&pic="+"http://party.mlyx.syyx.com/<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
+    link = service_url+"result.html?score="+score+"&pic="+"<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
     if (storage.getItem("personFaceValueTotalLocal")){
         var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
         link2 = link + person_link;
@@ -577,10 +598,10 @@ $signPackage = $jssdk->GetSignPackage();
                     $.ajax({
                         type:"GET",
                         dataType:"json",
-                        url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                        url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
                         success:function(data){
                             //alert('第1次分享,获得9次测颜值机会');
-                            window.location.href='http://party.mlyx.syyx.com/index.php';
+                            window.location.href=service_url+'index.php';
                             //alert('分享成功！请刷新页面');
                         },
                         error:function(){
@@ -605,10 +626,10 @@ $signPackage = $jssdk->GetSignPackage();
                     $.ajax({
                         type:"GET",
                         dataType:"json",
-                        url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                        url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
                         success:function(data){
                             //alert('第1次分享,获得9次测颜值机会');
-                            window.location.href='http://party.mlyx.syyx.com/index.php';
+                            window.location.href=service_url+'index.php';
                         },
                         error:function(){
                             alert('服务器故障，请稍后...')
@@ -652,7 +673,7 @@ $signPackage = $jssdk->GetSignPackage();
             wx.onMenuShareAppMessage({
                 title: "麻辣颜值大比拼",
                 desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                link: "http://party.mlyx.syyx.com/index.php",
+                link: service_url+"index.php",
                 imgUrl: imgUrl,
                 trigger: function () {
                     //alert('用户点击发送给朋友');
@@ -666,7 +687,7 @@ $signPackage = $jssdk->GetSignPackage();
             });
             wx.onMenuShareTimeline({
                 title: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                link: "http://party.mlyx.syyx.com/index.php",
+                link: service_url+"index.php",
                 imgUrl: imgUrl,
                 trigger: function () {
                     //alert('用户点击分享到朋友圈');
@@ -681,7 +702,7 @@ $signPackage = $jssdk->GetSignPackage();
             wx.onMenuShareQQ({
                 title: "麻辣颜值大比拼",
                 desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                link: "http://party.mlyx.syyx.com/index.php",
+                link: service_url+"index.php",
                 imgUrl: imgUrl,
                 success: function () {
                     // 用户确认分享后执行的回调函数
@@ -693,7 +714,7 @@ $signPackage = $jssdk->GetSignPackage();
             wx.onMenuShareWeibo({
                 title: "麻辣颜值大比拼",
                 desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
-                link: "http://party.mlyx.syyx.com/index.php",
+                link: service_url+"index.php",
                 imgUrl: imgUrl,
                 success: function () {
                     // 用户确认分享后执行的回调函数
@@ -752,18 +773,22 @@ $signPackage = $jssdk->GetSignPackage();
         $('#btn5').on('click',function(){
 
             if (!storage.getItem("pageLoadCount")) {//若为初次登陆
-                storage.setItem("pageLoadCount",0);
+                storage.setItem("pageLoadCount",1);
                 //打开登陆弹层
                 $('.login').addClass('on');
 
             }else{//若为二次登陆
                 storage.pageLoadCount = parseInt(storage.getItem("pageLoadCount")) + 1;
                 if(storage.getItem("phoneNum") && storage.getItem("schoolName")){
-                    storage.phoneNum = storage.getItem("phoneNum");
-                    storage.schoolName = storage.getItem("schoolName");
-                    var phoneNum = storage.phoneNum;
-                    var schoolName = storage.schoolName
+                    //storage.phoneNum = storage.getItem("phoneNum");
+                    //storage.schoolName = storage.getItem("schoolName");
+                    var phoneNum = parseInt(storage.getItem("phoneNum"));
+                    var schoolName = storage.getItem("schoolName");
                     submitPhone(phoneNum,schoolName)
+                }else{
+                    alert('获取用户信息失败！请重试');
+                    localStorage.clear();
+                    window.location.href='index.php'; //index_device-width.php
                 }
             }
         })
@@ -795,7 +820,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/submit_person.ashx?data="+encodeURIComponent(data),
+            url:service_url+"submit_person.ashx?data="+encodeURIComponent(data),
             success:function(data){
                 $('.login').removeClass('on');
                 if(data != null){
@@ -837,7 +862,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/submit_facevalue.ashx?data="+encodeURIComponent(data),
+            url:service_url+"submit_facevalue.ashx?data="+encodeURIComponent(data),
             success:function(data){
                 var personFaceValueTotal = data.person_face_value;
                 var canCheckChancesNew = data.can_check_chances;
@@ -870,10 +895,10 @@ $signPackage = $jssdk->GetSignPackage();
                             $.ajax({
                                 type:"GET",
                                 dataType:"json",
-                                url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                                url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
                                 success:function(data){
                                     //alert('第1次分享,获得9次测颜值机会');
-                                    window.location.href='http://party.mlyx.syyx.com/index.php';
+                                    window.location.href=service_url+'index.php';
                                 },
                                 error:function(){
                                     alert('服务器故障，请稍后...')
@@ -897,10 +922,10 @@ $signPackage = $jssdk->GetSignPackage();
                             $.ajax({
                                 type:"GET",
                                 dataType:"json",
-                                url:"http://party.mlyx.syyx.com/share_withwho.ashx?data="+encodeURIComponent(data),
+                                url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
                                 success:function(data){
                                     //alert('第1次分享,获得9次测颜值机会');
-                                    window.location.href='http://party.mlyx.syyx.com/index.php';
+                                    window.location.href=service_url+'index.php';
                                 },
                                 error:function(){
                                     alert('服务器故障，请稍后...')
@@ -954,7 +979,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/get_isenable_hongbao.ashx?data="+encodeURIComponent(data),
+            url:service_url+"get_isenable_hongbao.ashx?data="+encodeURIComponent(data),
             success:function(data){
                 if(data != null){
                     if(data.hongbao_chances > 0){
@@ -978,7 +1003,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/get_hongbao.ashx?data="+encodeURIComponent(data),
+            url:service_url+"get_hongbao.ashx?data="+encodeURIComponent(data),
             success:function(data){
                 if(data != null){
                     var carNo = data.hongbao_cardNo;
@@ -1019,7 +1044,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/get_personage_ranking.ashx",
+            url:service_url+"get_personage_ranking.ashx",
             success:function(data){
                 $("#personage_ranking_html").html("");
                 $.each(data,function(i){
@@ -1038,7 +1063,7 @@ $signPackage = $jssdk->GetSignPackage();
         $.ajax({
             type:"GET",
             dataType:"json",
-            url:"http://party.mlyx.syyx.com/get_school_ranking.ashx",
+            url:service_url+"get_school_ranking.ashx",
             success:function(data){
                 $("#school_ranking_html").html("");
                 $.each(data,function(i){
