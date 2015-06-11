@@ -11,7 +11,7 @@ body{-webkit-tap-highlight-color:#fdfdfd;}
 body{background: #fdfdfd}
 html,body{position:relative;width:100%;height:100%;font-size: 12px;}
 body{width: 100%;position: relative;margin: 0 auto}
-.wrap{width:100%;height: auto;overflow: hidden;position: absolute;opacity: 0;top:50%;left:50%
+.wrap{width:100%;height: auto;overflow: hidden;position: absolute;opacity: 0;top:50%;left:50%;
     -webkit-transition:all .5s ease-in-out;-moz-transition:all .5s ease-in-out;-ms-transition:all .5s ease-in-out;transition:all .5s ease-in-out;z-index: 80;
     -webkit-transform: translate3d(-50%,-50%,0);
     -moz-transform: translate3d(-50%,-50%,0);
@@ -195,11 +195,14 @@ body{width: 100%;position: relative;margin: 0 auto}
     color: #CB6F6B;}
 .tip4 h3 span{color: #428fd5}
 .tip4 ul{position: absolute;
-    left: -12%;
-    top: 23%;
-    transform: scale(0.59);
-    -webkit-transform: scale(0.59);}
-.tip4 li{  width: 420px;height: 48px;line-height: 54px;font-size: 20px;color: #fff;padding-left: 52px;position: relative;}
+    width: 100%;
+    top: 40%;}
+.tip4 li{   width: 84%;
+    line-height: 2.4;
+    font-size: 1em;
+    color: #fff;
+    padding-left: 16%;
+    position: relative;}
 .tip4 li span{position: absolute;  right: 56px;}
 .tip6{background: url(../img/tip5.png) no-repeat;background-size: 100% 100%}
 .btn9{   display: block;
