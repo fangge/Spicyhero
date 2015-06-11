@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             <img src="<?php echo $destination;?>"/>
         </div>
         <a class="btn" id="btn2"><img src="img/btn8.png" alt=""/></a>
-        <a class="btn btn3" href="./?upload=true"><img src="img/btn5.png" alt=""/></a>
+        <a class="btn btn3" href="./index_device-width.php?upload=true"><img src="img/btn5.png" alt=""/></a>
 
     </div>
     <div class="wrap wrap4">
@@ -214,8 +214,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <a class="btn" id="btn5"><img src="img/btn11.png" alt=""/></a>
         <img class="tip tip2" src="img/tip3.png" id="rewardOver"/>
         <div class="tip2 login">
-            <input type="text" id="school" value="请输入手机号码" placeholder="请输入手机号码"  onfocus="if(this.value=='请输入手机号码'){this.value='';}" onblur="if(this.value==''){this.value='请输入手机号码';}" />
-            <input type="text" id="phone" value="请输入学校名称" placeholder="请输入学校名称"  onfocus="if(this.value=='请输入学校名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入学校名称';}" />
+            <input type="text" id="school" value="请输入学校名称" placeholder="请输入学校名称"  onfocus="if(this.value=='请输入学校名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入学校名称';}" />
+            <input type="text" id="phone" value="请输入手机号码" placeholder="请输入手机号码"  onfocus="if(this.value=='请输入手机号码'){this.value='';}" onblur="if(this.value==''){this.value='请输入手机号码';}" />
             <a class="btn" id="sub-phone"><img src="img/submit-phone.png"/></a>
         </div>
         <div class="tip tip12">
@@ -548,7 +548,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     $('.login').removeClass('on');
                     if(data != null){
                         var check_chances = data.can_check_chances;
-                        var share_chances = data.share_chances;
                     }
 
                     if(check_chances>0){
@@ -556,10 +555,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         //判断领红包次数
                         getRewardTimes(p);
                     }else{
-                        if(share_chances>0){
                             //所有次数都用完
                             $('.tip12').addClass('on')
-                        }
 //                        else{
 //                            //未分享还可以有次数
 //                            $('.tip13').addClass('on')
