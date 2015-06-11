@@ -107,9 +107,9 @@ body{width: 100%;position: relative;margin: 0 auto}
     bottom: 13%;z-index: 50}
 .img-wrap{position: absolute;   width: 64.21875%;
     height: 43.396226%;overflow: hidden }
-.wrap3 .img-wrap{ left: 19%;
-    top: 30%;}
-.wrap4 .img-wrap{ left: 19%;
+.wrap3 .img-wrap{ left: 18.3%;
+    top: 29%;}
+.wrap4 .img-wrap{ left: 18.28%;
     top: 20%;}
 .img-wrap img{display:block;height:auto;width:100%;position: absolute;left:50%;top:50%;-webkit-transform:translate3d(-50%,-50%,0);-moz-transform:translate3d(-50%,-50%,0);-ms-transform:translate3d(-50%,-50%,0);transform:translate3d(-50%,-50%,0);}
 #btn2,.btn3{ width: 47.34375%;
@@ -224,9 +224,9 @@ body{width: 100%;position: relative;margin: 0 auto}
 .t11{left:240px;} /*left:265px;*/
 .wrap6 .t9{top:39.6%;}
 .login{background: url(../img/login.jpg) no-repeat;background-size: 100% 100%}
-#phone,#school{display: block;width:42.5%;height: 4.865938%;background: none;border: 0; color: #b3b3b3;font-size:24px;text-align: center;line-height: 49px;  position: absolute; left: 40%; }
+#phone,#school{display: block;width:42.5%;height: 4.865938%;background: none;border: 0; color: #b3b3b3;font-size:24px;text-align: center;line-height: 1;  position: absolute; left: 40%; }
 #phone{top: 39.2%;}
-#school{top:53%;}
+#school{top:52.4%;}
 #sub-phone{  left: 45%;
     top: 63%;
     width: 28.59375%;

@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/comv2.css"/>
+    <link rel="stylesheet" href="css/comv2.css?20150611"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="sapp.js" type="text/javascript"></script>
     <script type="text/javascript">
