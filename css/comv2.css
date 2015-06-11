@@ -224,7 +224,7 @@ body{width: 100%;position: relative;margin: 0 auto}
 .t11{left:240px;} /*left:265px;*/
 .wrap6 .t9{top:39.6%;}
 .login{background: url(../img/login.jpg) no-repeat;background-size: 100% 100%}
-#phone,#school{display: block;width:42.5%;height: 4.865938%;background: none;border: 0; color: #b3b3b3;font-size:1.4em;text-align: center;line-height: 1;  position: absolute; left: 40%; }
+#phone,#school{display: block;width:42.5%;height: 4.865938%;background: none;border: 0; color: #b3b3b3;text-align: center;position: absolute; left: 40%;vertical-align: middle }
 #phone{top: 39.2%;}
 #school{top:52.4%;}
 #sub-phone{  left: 45%;

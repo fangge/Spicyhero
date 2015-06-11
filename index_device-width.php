@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/comv2.css?20150611"/>
+    <link rel="stylesheet" href="css/comv2.css?20150611v2"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="sapp.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -214,8 +214,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <a class="btn" id="btn5"><img src="img/btn11.png" alt=""/></a>
         <img class="tip tip2" src="img/tip3.png" id="rewardOver"/>
         <div class="tip2 login">
-            <input type="text" id="school"/>
-            <input type="text" id="phone"/>
+            <input type="text" id="school" value="请输入手机号码" placeholder="请输入手机号码"  onfocus="if(this.value=='请输入手机号码'){this.value='';}" onblur="if(this.value==''){this.value='请输入手机号码';}" />
+            <input type="text" id="phone" value="请输入学校名称" placeholder="请输入学校名称"  onfocus="if(this.value=='请输入学校名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入学校名称';}" />
             <a class="btn" id="sub-phone"><img src="img/submit-phone.png"/></a>
         </div>
         <div class="tip tip12">
@@ -511,9 +511,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         var schoolName = storage.getItem("schoolName");
                         submitPhone(phoneNum,schoolName)
                     }else{
-                        alert('获取用户信息失败！请重试');
-                        localStorage.clear();
-                        window.location.href='index_device-width.php'; //index_device-width.php
+                        $('.login').addClass('on');
                     }
                 }
             })
