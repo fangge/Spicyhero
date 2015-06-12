@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <head lang="zh">
     <title>《麻辣英雄》麻辣颜值大比拼</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,user-scalable=no">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
     <meta name="apple-touch-fullscreen" content="YES">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
