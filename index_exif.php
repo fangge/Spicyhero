@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Created by MrF.
  * Date: 2015/6/8
@@ -21,18 +21,18 @@ $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $file = $_FILES["upfile"];
     if (!is_uploaded_file($file["tmp_name"])){
-        echo "<script>alert('图片不存在!');window.location.href='index_device-width.php';</script>";exit;
+        echo "<script>alert('图片不存在!');window.location.href='index.php';</script>";exit;
     }
     if($max_file_size < $file["size"]){
-        echo "<script>alert('文件太大，请换一张图片');window.location.href='index_device-width.php';</script>";exit;
+        echo "<script>alert('文件太大，请换一张图片');window.location.href='index.php';</script>";exit;
     }
     if(!in_array($file["type"], $uptypes)){
-        echo "<script>alert('".$file["type"]."文件类型不符!');window.location.href='index_device-width.php';</script>";exit;
+        echo "<script>alert('".$file["type"]."文件类型不符!');window.location.href='index.php';</script>";exit;
     }
     if(!file_exists($destination_folder)){
         mkdir($destination_folder);
     }
-//IOS端判断图片exif信息，进行图片翻转
+    //IOS端判断图片exif信息，进行图片翻转
     $filename=$file["tmp_name"];
     $image = imagecreatefromstring(file_get_contents($filename));
     $exif = exif_read_data($filename);
@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     //增加排行榜小图片截图
     require 'imgthumb.class.php';
     $resizeimage2 = new resizeimage($destination, 65, 70, "1",$destination2);
+
 }
 ?>
 
@@ -73,16 +74,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <head lang="zh">
     <title>《麻辣英雄》麻辣颜值大比拼</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+    <meta name="viewport" content="width=640,user-scalable=no">
     <meta name="apple-touch-fullscreen" content="YES">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/comv2.css?20150612"/>
+    <link rel="stylesheet" href="css/com.css?20150611"/>
     <script src="jquery.js" type="text/javascript"></script>
-    <script src="sapp.js" type="text/javascript"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript">
         var service_url = "http://party.mlyx.syyx.com:8080/";
     </script>
@@ -100,6 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <div style="display: none"><img src="http://party.mlyx.syyx.com/img/share.jpg" alt=""/></div>
 <!--上传前-->
 <?php if (!($_SERVER['REQUEST_METHOD'] == 'POST')){?>
+    <!-- 分享内容 start-->
+    <div style="display: none">
+        <div id="share-title">麻辣颜值大比拼</div>
+        <div id="share-des">刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！</div>
+        <div id="share-img">http://party.mlyx.syyx.com/img/share.jpg</div>
+
+    </div>
+    <!-- 分享内容 end-->
     <div class="in" id="loading">
         <div class="floatingCirclesG">
             <div class="f_circleG" id="frotateG_01">
@@ -129,20 +138,123 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <img class="btn upload" src="img/btn2.png"/>
         <form enctype="multipart/form-data" method="post" name="upform"><input id="uploadInput" name="upfile" type="file"  capture="camera" accept="image/*" class="chuan btn" onchange="upform.submit()" /></form>
     </div>
+<?php
+$appid = "wx445c5cd15c5d5184";
+$secret = "4eda327bb6828478a1340b148ad46662";
 
+require_once "jssdk.php";
+
+$jssdk = new JSSDK($appid, $secret);
+$signPackage = $jssdk->GetSignPackage();
+?>
     <script type="text/javascript">
-        sapp.fill({
-            target : ".wrap,.tip",
-            width : 640,
-            height : 1007,
-            mode : "contain"
-        })
         var title = $('#share-title').text();
         var desc = $('#share-des').text();
         var link = window.location.href;
         var imgUrl = $('#share-img').text();
 
-
+        wx.config({
+            appId: '<?php echo $signPackage["appId"];?>',
+            timestamp: <?php echo $signPackage["timestamp"];?>,
+            nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+            signature: '<?php echo $signPackage["signature"];?>',
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo'
+            ]
+        });
+        wx.ready(function () {
+            wx.onMenuShareAppMessage({
+                title: title,
+                desc: desc,
+                link: link,
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击发送给朋友');
+                },
+                success: function () {
+                    //alert('已分享');
+                    if(localStorage.phoneNum != null){
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                //window.location.href=service_url+'index.php';
+                                alert('分享成功！');
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    }
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareTimeline({
+                title: desc,
+                link: link,
+                imgUrl: imgUrl,
+                trigger: function () {
+                    //alert('用户点击分享到朋友圈');
+                },
+                success: function () {
+                    //alert('已分享');
+                    if(localStorage.phoneNum != null){
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                //window.location.href=service_url+'index.php';
+                                alert('分享成功！');
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    }
+                },
+                cancel: function () {
+                    //alert('已取消');
+                }
+            });
+            wx.onMenuShareQQ({
+                title: title,
+                link: link,
+                desc: desc,
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+            wx.onMenuShareWeibo({
+                title: title,
+                link: link,
+                desc: desc,
+                imgUrl: imgUrl,
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            });
+        });
+        wx.error(function(res){
+            //alert(res);
+        });
         $(window).on("load", function(){
             //loading
             $("#loading").removeClass("in");
@@ -206,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             <img src="<?php echo $destination;?>"/>
         </div>
         <a class="btn" id="btn2"><img src="img/btn8.png" alt=""/></a>
-        <a class="btn btn3" href="./index_device-width.php?upload=true"><img src="img/btn5.png" alt=""/></a>
+        <a class="btn btn3" href="./?upload=true"><img src="img/btn5.png" alt=""/></a>
 
     </div>
     <div class="wrap wrap4">
@@ -228,18 +340,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <a class="btn" id="btn5"><img src="img/btn11.png" alt=""/></a>
         <img class="tip tip2" src="img/tip3.png" id="rewardOver"/>
         <div class="tip2 login">
-            <input type="text" id="school" value="请输入学校名称" placeholder="请输入学校名称"  onfocus="if(this.value=='请输入学校名称'){this.value='';}" onblur="if(this.value==''){this.value='请输入学校名称';}" />
-            <input type="text" id="phone" value="请输入手机号码" placeholder="请输入手机号码"  onfocus="if(this.value=='请输入手机号码'){this.value='';}" onblur="if(this.value==''){this.value='请输入手机号码';}" />
+            <input type="text" id="school"/>
+            <input type="text" id="phone"/>
             <a class="btn" id="sub-phone"><img src="img/submit-phone.png"/></a>
         </div>
         <div class="tip tip12">
             <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>
             <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>
         </div>
-<!--        <div class="tip tip13">-->
-<!--            <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>-->
-<!--            <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>-->
-<!--        </div>-->
+        <div class="tip tip13">
+            <a class="btn btn10"><img src="img/btn6.png" alt=""/></a>
+            <a class="btn btn11"><img src="img/btn7.png" alt=""/></a>
+        </div>
     </div>
     <!--    6.17以前-->
     <div class="wrap wrap5">
@@ -417,23 +529,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <!--<div class="wrap wrap5_2">-->
     <!---->
     <!--</div>-->
+<?php
+$appid = "wx445c5cd15c5d5184";
+$secret = "4eda327bb6828478a1340b148ad46662";
 
+require_once "jssdk.php";
+
+$jssdk = new JSSDK($appid, $secret);
+$signPackage = $jssdk->GetSignPackage();
+?>
     <script type="text/javascript">
-        sapp.fill({
-            target : ".wrap,.tip",
-            width : 640,
-            height : 1007,
-            mode : "contain"
-        })
+
         $(window).on("load", function(){
             //loading
             $("#loading").removeClass("in");
             $('.wrap3').addClass("in");
         });
-
+        wx.config({
+            appId: '<?php echo $signPackage["appId"];?>',
+            timestamp: <?php echo $signPackage["timestamp"];?>,
+            nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+            signature: '<?php echo $signPackage["signature"];?>',
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo'
+            ]
+        });
 
         var desc,tArrary,hongbaoValue;
-        //var link,link2;
+        var link,link2;
         var title = $('#share-title').text();
         var imgUrl = $('#share-img').text();
         var storage = window.localStorage;
@@ -468,6 +594,156 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             hongbaoValue = 3;
         }
         $('#des').html('').text(desc);
+        link = service_url+"result.html?score="+score+"&pic="+"<?php echo $destination;?>"+"&des="+encodeURIComponent(desc);
+        if (storage.getItem("personFaceValueTotalLocal")){
+            var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
+            link2 = link + person_link;
+            wx.ready(function () {
+                wx.onMenuShareAppMessage({
+                    title: title,
+                    desc: "我的颜值是"+score+"分, "+desc,
+                    link: link2,
+                    imgUrl: imgUrl,
+                    trigger: function () {
+                        //alert('用户点击发送给朋友');
+                    },
+                    success: function () {
+                        //alert('已分享');
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                window.location.href=service_url+'index.php';
+                                //alert('分享成功！请刷新页面');
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    },
+                    cancel: function () {
+                        //alert('已取消');
+                    }
+                });
+                wx.onMenuShareTimeline({
+                    link:link2,
+                    title: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
+                    imgUrl: imgUrl,
+                    trigger: function () {
+                        //alert('用户点击分享到朋友圈');
+                    },
+                    success: function () {
+                        //alert('已分享');
+                        var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                        $.ajax({
+                            type:"GET",
+                            dataType:"json",
+                            url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                            success:function(data){
+                                //alert('第1次分享,获得9次测颜值机会');
+                                window.location.href=service_url+'index.php';
+                            },
+                            error:function(){
+                                alert('服务器故障，请稍后...')
+                            }
+                        })
+                    },
+                    cancel: function () {
+                        //alert('已取消');
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: title,
+                    link: link2,
+                    desc: "我的颜值是"+score+"分, "+desc,
+                    imgUrl: imgUrl,
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+                wx.onMenuShareWeibo({
+                    title: title,
+                    link: link2,
+                    desc: "我的颜值是"+score+"分, "+desc,
+                    imgUrl: imgUrl,
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+            });
+            wx.error(function(res){
+                //alert(res);
+            });
+        }else{
+            wx.ready(function () {
+                wx.onMenuShareAppMessage({
+                    title: "麻辣颜值大比拼",
+                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                    link: service_url+"index.php",
+                    imgUrl: imgUrl,
+                    trigger: function () {
+                        //alert('用户点击发送给朋友');
+                    },
+                    success: function () {
+                        //alert('已分享');
+                    },
+                    cancel: function () {
+                        //alert('已取消');
+                    }
+                });
+                wx.onMenuShareTimeline({
+                    title: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                    link: service_url+"index.php",
+                    imgUrl: imgUrl,
+                    trigger: function () {
+                        //alert('用户点击分享到朋友圈');
+                    },
+                    success: function () {
+                        //alert('已分享');
+                    },
+                    cancel: function () {
+                        //alert('已取消');
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: "麻辣颜值大比拼",
+                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                    link: service_url+"index.php",
+                    imgUrl: imgUrl,
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+                wx.onMenuShareWeibo({
+                    title: "麻辣颜值大比拼",
+                    desc: "刷颜值也能拿红包！原来我的脸这么值钱！快来看看你的颜值值多少钱吧！",
+                    link: service_url+"index.php",
+                    imgUrl: imgUrl,
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                    }
+                });
+            });
+            wx.error(function(res){
+                //alert(res);
+            });
+        }
+
 
         $(function(){
             $('.tip').on('click',function(){
@@ -525,7 +801,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         var schoolName = storage.getItem("schoolName");
                         submitPhone(phoneNum,schoolName)
                     }else{
-                        $('.login').addClass('on');
+                        alert('获取用户信息失败！请重试');
+                        localStorage.clear();
+                        window.location.href='index.php'; //index_device-width.php
                     }
                 }
             })
@@ -562,6 +840,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     $('.login').removeClass('on');
                     if(data != null){
                         var check_chances = data.can_check_chances;
+                        var share_chances = data.share_chances;
                     }
 
                     if(check_chances>0){
@@ -569,13 +848,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         //判断领红包次数
                         getRewardTimes(p);
                     }else{
+                        if(share_chances>0){
                             //所有次数都用完
                             $('.tip12').addClass('on')
-//                        else{
-//                            //未分享还可以有次数
-//                            $('.tip13').addClass('on')
-//
-//                        }
+                        }else{
+                            //未分享还可以有次数
+                            $('.tip13').addClass('on')
+
+                        }
                     }
                 },
                 error:function(){
@@ -587,7 +867,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         //$('#school_name').text(storage.getItem("schoolName"));
         //$('#person_face_value_total').text(parseInt(storage.getItem("personFaceValueTotalLocal")));
         $('#school_name').text(localStorage.schoolName);
-        if(localStorage.personFaceValueTotalLocal != null){$('#person_face_value_total').text(parseInt(localStorage.personFaceValueTotalLocal));}
+        $('#person_face_value_total').text(parseInt(localStorage.personFaceValueTotalLocal));
         //颜值结果录入数据库，并返回相关信息
         function submitFaceValue(phoneNum,schoolName,personFaceValue){
             var p = phoneNum;
@@ -613,6 +893,92 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     localStorage.personFaceValueTotalLocal = personFaceValueTotal;
                     localStorage.personFaceRanking = personFaceRanking;
                     localStorage.schoolFaceRanking = schoolFaceRanking;
+                    var person_link = "&personFaceValueTotal="+localStorage.personFaceValueTotalLocal+"&personFaceRanking="+localStorage.personFaceRanking+"&schoolName="+encodeURIComponent(localStorage.schoolName)+"&schoolFaceRanking="+localStorage.schoolFaceRanking;
+                    link2 = link + person_link;
+                    wx.ready(function () {
+                        wx.onMenuShareAppMessage({
+                            title: title,
+                            desc: "我的颜值是"+score+"分, "+desc,
+                            link: link2,
+                            imgUrl: imgUrl,
+                            trigger: function () {
+                                //alert('用户点击发送给朋友');
+                            },
+                            success: function () {
+                                //alert('已分享');
+                                var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                                $.ajax({
+                                    type:"GET",
+                                    dataType:"json",
+                                    url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                                    success:function(data){
+                                        //alert('第1次分享,获得9次测颜值机会');
+                                        window.location.href=service_url+'index.php';
+                                    },
+                                    error:function(){
+                                        alert('服务器故障，请稍后...')
+                                    }
+                                })
+                            },
+                            cancel: function () {
+                                //alert('已取消');
+                            }
+                        });
+                        wx.onMenuShareTimeline({
+                            link:link2,
+                            title: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
+                            imgUrl: imgUrl,
+                            trigger: function () {
+                                //alert('用户点击分享到朋友圈');
+                            },
+                            success: function () {
+                                //alert('已分享');
+                                var data = "{'person_id':'"+parseInt(localStorage.phoneNum)+"'}";
+                                $.ajax({
+                                    type:"GET",
+                                    dataType:"json",
+                                    url:service_url+"share_withwho.ashx?data="+encodeURIComponent(data),
+                                    success:function(data){
+                                        //alert('第1次分享,获得9次测颜值机会');
+                                        window.location.href=service_url+'index.php';
+                                    },
+                                    error:function(){
+                                        alert('服务器故障，请稍后...')
+                                    }
+                                })
+                            },
+                            cancel: function () {
+                                //alert('已取消');
+                            }
+                        });
+                        wx.onMenuShareQQ({
+                            title: title,
+                            link: link2,
+                            desc: "我的颜值是"+score+"分, "+desc,
+                            imgUrl: imgUrl,
+                            success: function () {
+                                // 用户确认分享后执行的回调函数
+                            },
+                            cancel: function () {
+                                // 用户取消分享后执行的回调函数
+                            }
+                        });
+                        wx.onMenuShareWeibo({
+                            title: title,
+                            link: link2,
+                            desc: "我的颜值是"+score+"分, "+desc,
+                            imgUrl: imgUrl,
+                            success: function () {
+                                // 用户确认分享后执行的回调函数
+                            },
+                            cancel: function () {
+                                // 用户取消分享后执行的回调函数
+                            }
+                        });
+                    });
+                    wx.error(function(res){
+                        //alert(res);
+                    });
                 },
                 error:function(){
                     alert('服务器故障2，请稍后...')

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Created by MrF.
  * Date: 2015/6/8
@@ -32,25 +32,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if(!file_exists($destination_folder)){
         mkdir($destination_folder);
     }
-
+//IOS端判断图片exif信息，进行图片翻转
     $filename=$file["tmp_name"];
+    $image = imagecreatefromstring(file_get_contents($filename));
+    $exif = exif_read_data($filename);
+    if(!empty($exif['Orientation'])) {
+        switch($exif['Orientation']) {
+            case 8:
+                $image = imagerotate($image,90,0);
+                break;
+            case 3:
+                $image = imagerotate($image,180,0);
+                break;
+            case 6:
+                $image = imagerotate($image,-90,0);
+                break;
+        }
+    }
     $image_size = getimagesize($filename);
     $pinfo=pathinfo($file["name"]);
     $ftype=$pinfo['extension'];
     $destination = $destination_folder.time().".".$ftype;
     $destination2 = $destination_folder.time()."_thumb.".$ftype;
-    if (file_exists($destination) && $overwrite != true){
-        echo "<script>alert('同名文件已经存在了');window.location.href='index.php';</script>";exit;
-    }
-    if(!move_uploaded_file ($filename, $destination)){
-        echo "<script>alert('移动文件出错');window.location.href='index.php';</script>";exit;
-    }
+    imagejpeg($image, $destination, 60);
+//    if (file_exists($destination) && $overwrite != true){
+//        echo "<script>alert('同名文件已经存在了');window.location.href='index.php';</script>";exit;
+//    }
+//    if(!move_uploaded_file ($filename, $destination)){
+//        echo "<script>alert('移动文件出错');</script>";exit;
+//    }
+
+    //增加排行榜小图片截图
     require 'imgthumb.class.php';
     $resizeimage2 = new resizeimage($destination, 65, 70, "1",$destination2);
-
-//    if ($file["size"]>3000000){
-//        $resizeimage = new resizeimage($destination, $image_size[0]/$scale, $image_size[1]/$scale, "0",$destination);
-//    }
 }
 ?>
 
@@ -66,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/com.css?20150608"/>
+    <link rel="stylesheet" href="css/com.css?20150611"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript">
@@ -586,7 +600,7 @@ $signPackage = $jssdk->GetSignPackage();
         wx.ready(function () {
             wx.onMenuShareAppMessage({
                 title: title,
-                desc: "我的颜值是"+score+"分, "+desc,
+                desc: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！", //"我的颜值是"+score+"分, "+desc
                 link: link2,
                 imgUrl: imgUrl,
                 trigger: function () {
@@ -786,9 +800,10 @@ $signPackage = $jssdk->GetSignPackage();
                     var schoolName = storage.getItem("schoolName");
                     submitPhone(phoneNum,schoolName)
                 }else{
-                    alert('获取用户信息失败！请重试');
-                    localStorage.clear();
-                    window.location.href='index.php'; //index_device-width.php
+                    //alert('获取用户信息失败！请重试');
+                    //localStorage.clear();
+                    //window.location.href='index.php'; //index_device-width.php
+                    $('.login').addClass('on');
                 }
             }
         })
@@ -852,7 +867,7 @@ $signPackage = $jssdk->GetSignPackage();
     //$('#school_name').text(storage.getItem("schoolName"));
     //$('#person_face_value_total').text(parseInt(storage.getItem("personFaceValueTotalLocal")));
     $('#school_name').text(localStorage.schoolName);
-    $('#person_face_value_total').text(parseInt(localStorage.personFaceValueTotalLocal));
+    if(localStorage.personFaceValueTotalLocal != null){$('#person_face_value_total').text(parseInt(localStorage.personFaceValueTotalLocal));}
     //颜值结果录入数据库，并返回相关信息
     function submitFaceValue(phoneNum,schoolName,personFaceValue){
         var p = phoneNum;
@@ -883,7 +898,7 @@ $signPackage = $jssdk->GetSignPackage();
                 wx.ready(function () {
                     wx.onMenuShareAppMessage({
                         title: title,
-                        desc: "我的颜值是"+score+"分, "+desc,
+                        desc: "刷颜值也能拿红包！我的麻辣颜值指数是"+score+"分，快来看看你的脸值多少钱吧！",
                         link: link2,
                         imgUrl: imgUrl,
                         trigger: function () {
