@@ -14,7 +14,8 @@ body{width: 640px;height:1007px;position: relative;margin: 0 auto}
 .wrap{width: 640px;height: 1007px;overflow: hidden;position: absolute;opacity: 0;top:0;left:0;
     -webkit-transition:all .5s ease-in-out;-moz-transition:all .5s ease-in-out;-ms-transition:all .5s ease-in-out;transition:all .5s ease-in-out;z-index: 80;
 }
-.in.wrap{opacity: 1;z-index: 99
+.in.wrap{opacity: 1;z-index: 99}
+.tip,.tip2{display: block; position:absolute;top:0;left:0;opacity: 0;width: 640px;height: 1007px;z-index: 50;
     -webkit-transform: translate3d(0,-100%,0);
     transform: translate3d(0,-100%,0);
     -webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-ms-transition:all .2s ease-in-out;transition:all .2s ease-in-out;}
