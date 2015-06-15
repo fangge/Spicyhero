@@ -866,7 +866,7 @@ $signPackage = $jssdk->GetSignPackage();
 
     //$('#school_name').text(storage.getItem("schoolName"));
     //$('#person_face_value_total').text(parseInt(storage.getItem("personFaceValueTotalLocal")));
-    $('#school_name').text(localStorage.schoolName);
+    $('#school_name').text(cutString(''+localStorage.schoolName,14));
     if(localStorage.personFaceValueTotalLocal != null){$('#person_face_value_total').text(parseInt(localStorage.personFaceValueTotalLocal));}
     //颜值结果录入数据库，并返回相关信息
     function submitFaceValue(phoneNum,schoolName,personFaceValue){
