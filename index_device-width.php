@@ -7,27 +7,36 @@
 header("Content-type:text/html;charset=utf-8");
 //上传文件类型列表
 $uptypes=array(
-    'image/jpg',
-    'image/jpeg',
-    'image/png',
-    'image/pjpeg',
-    'image/gif',
-    'image/bmp',
-    'image/x-png'
+    'jpg',
+    'jpeg',
+    'png',
+    'pjpeg',
+    'gif',
+    'bmp',
+    'x-png'
 );
+function getFileExt($file_name)
+{
+    while($dot = strpos($file_name, "."))
+    {
+        $file_name = substr($file_name, $dot+1);
+    }
+    return $file_name;
+}
 $max_file_size=5000000;     //上传文件大小限制, 单位BYTE
 $destination_folder="uploads/"; //上传文件路径
 $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $file = $_FILES["upfile"];
+    $test_name= strtolower(getFileExt($file["name"]));
     if (!is_uploaded_file($file["tmp_name"])){
         echo "<script>alert('图片不存在!');window.location.href='index_device-width.php';</script>";exit;
     }
     if($max_file_size < $file["size"]){
         echo "<script>alert('文件太大，请换一张图片');window.location.href='index_device-width.php';</script>";exit;
     }
-    if(!in_array($file["type"], $uptypes)){
-        echo "<script>alert('".$file["type"]."文件类型不符!');window.location.href='index_device-width.php';</script>";exit;
+    if(!in_array($test_name, $uptypes)){
+        echo "<script>alert('".$test_name."为不支持文件类型!');window.location.href='index_device-width.php';</script>";exit;
     }
     if(!file_exists($destination_folder)){
         mkdir($destination_folder);
