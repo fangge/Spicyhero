@@ -20,7 +20,7 @@ body{width: 100%;position: relative;margin: 0 auto;overflow: hidden}
     transform: translate3d(-50%,-50%,0);
 }
 .in.wrap{opacity: 1;z-index: 99}
-.tip,.tip2{ position:absolute;top:0;left:0;opacity: 0;width: 100%;height: 100%;z-index: 50;
+.tip,.tip2{ position:absolute;top:0;left:0;opacity: 0;width: 100%!important;height: 100%;z-index: 50;
     -webkit-transform: translate3d(0,-100%,0);
     transform: translate3d(0,-100%,0);
     -webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-ms-transition:all .2s ease-in-out;transition:all .2s ease-in-out;}
@@ -151,7 +151,7 @@ body{width: 100%;position: relative;margin: 0 auto;overflow: hidden}
     top: -30%;
     width: 100%;
     height: 100%;
-top:1%;}
+    top:1%;}
 .tip3 li{  width: 64.0625%;
     height: 9.136047%;
     background: url(../img/list.png) no-repeat;

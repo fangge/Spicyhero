@@ -1053,9 +1053,38 @@ $signPackage = $jssdk->GetSignPackage();
         $('.t10').hide();
         $('.t11').show();
     }
-
+    /**参数说明：
+     * 根据长度截取先使用字符串，超长部分追加…
+     * str 对象字符串
+     * len 目标字节长度
+     * 返回值： 处理结果字符串
+     */
+    function cutString(str, len) {
+        //length属性读出来的汉字长度为1
+        if(str.length*2 <= len) {
+            return str;
+        }
+        var strlen = 0;
+        var s = "";
+        for(var i = 0;i < str.length; i++) {
+            s = s + str.charAt(i);
+            if (str.charCodeAt(i) > 128) {
+                strlen = strlen + 2;
+                if(strlen >= len){
+                    return s.substring(0,s.length-1) + "...";
+                }
+            } else {
+                strlen = strlen + 1;
+                if(strlen >= len){
+                    return s.substring(0,s.length-2) + "...";
+                }
+            }
+        }
+        return s;
+    }
     //个人排行榜
     function getPersonageRanking(){
+        var sname;
         $.ajax({
             type:"GET",
             dataType:"json",
@@ -1064,7 +1093,8 @@ $signPackage = $jssdk->GetSignPackage();
                 $("#personage_ranking_html").html("");
                 $.each(data,function(i){
                     var n=i+1;
-                    $("#personage_ranking_html").append("<li><img src='"+data[i].img_url+"'/><p class='list-t1'>"+n+"</p><p class='list-t2'>"+data[i].school_name+"</p><p class='list-t3'>"+data[i].person_face_value+"</p></li>");
+                    sname = cutString(''+data[i].school_name,14);
+                    $("#personage_ranking_html").append("<li><img src='"+data[i].img_url+"'/><p class='list-t1'>"+n+"</p><p class='list-t2'>"+sname+"</p><p class='list-t3'>"+data[i].person_face_value+"</p></li>");
                 });
             },
             error:function(){
@@ -1075,6 +1105,7 @@ $signPackage = $jssdk->GetSignPackage();
 
     //高校排行榜
     function getSchoolRanking(){
+        var sname;
         $.ajax({
             type:"GET",
             dataType:"json",
@@ -1083,7 +1114,8 @@ $signPackage = $jssdk->GetSignPackage();
                 $("#school_ranking_html").html("");
                 $.each(data,function(i){
                     var n=i+1;
-                    $("#school_ranking_html").append("<li>"+n+"."+data[i].school_name+"<span>颜值总分:"+data[i].school_face_value+"</span></li>");
+                    sname = cutString(''+data[i].school_name,14);
+                    $("#school_ranking_html").append("<li>"+n+"."+sname+"<span>颜值总分:"+data[i].school_face_value+"</span></li>");
                 });
             },
             error:function(){
