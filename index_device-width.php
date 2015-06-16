@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Created by MrF.
  * Date: 2015/6/8
@@ -15,34 +15,22 @@ $uptypes=array(
     'bmp',
     'x-png'
 );
-function getFileExt($file_name)
-{
-    while($dot = strpos($file_name, "."))
-    {
-        $file_name = substr($file_name, $dot+1);
-    }
-    return $file_name;
-}
 $max_file_size=5000000;     //上传文件大小限制, 单位BYTE
 $destination_folder="uploads/"; //上传文件路径
 $scale = 10;//压缩文件比例
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $file = $_FILES["upfile"];
-    $test_name= strtolower(getFileExt($file["name"]));
     if (!is_uploaded_file($file["tmp_name"])){
         echo "<script>alert('图片不存在!');window.location.href='index_device-width.php';</script>";exit;
     }
     if($max_file_size < $file["size"]){
         echo "<script>alert('文件太大，请换一张图片');window.location.href='index_device-width.php';</script>";exit;
     }
-    if(!in_array($test_name, $uptypes)){
-        echo "<script>alert('".$test_name."为不支持文件类型!');window.location.href='index_device-width.php';</script>";exit;
-    }
     if(!file_exists($destination_folder)){
         mkdir($destination_folder);
     }
-
     $filename=$file["tmp_name"];
+
     //IOS端判断图片exif信息，进行图片翻转
     $image = imagecreatefromstring(file_get_contents($filename));
     $exif = exif_read_data($filename);
@@ -59,17 +47,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 break;
         }
     }
+
     $image_size = getimagesize($filename);
-    $pinfo=pathinfo($file["name"]);
-    $ftype=$pinfo['extension'];
-    $destination = $destination_folder.time().".".$ftype;
-    $destination2 = $destination_folder.time()."_thumb.".$ftype;
-    imagejpeg($image, $destination, 60);
+    switch ($image_size['mime']) {
+        case 'image/jpeg':
+            $destination = $destination_folder.time().".jpg";
+            $destination2 = $destination_folder.time()."_thumb.jpg";
+            imagejpeg($image, $destination, 60);
+            break;
+        case 'image/gif':
+            $destination = $destination_folder.time().".gif";
+            $destination2 = $destination_folder.time()."_thumb.gif";
+            imagegif($image, $destination);
+            break;
+        case 'image/png':
+            $destination = $destination_folder.time().".png";
+            $destination2 = $destination_folder.time()."_thumb.png";
+            imagepng($image, $destination);
+            break;
+        case 'image/bmp':
+            $destination = $destination_folder.time().".bmp";
+            $destination2 = $destination_folder.time()."_thumb.bmp";
+            imagewbmp($image, $destination);
+            break;
+        default:
+            $destination = $destination_folder.time().".jpg";
+            $destination2 = $destination_folder.time()."_thumb.jpg";
+            imagejpeg($image, $destination, 60);
+            break;
+    }
 //    if (file_exists($destination) && $overwrite != true){
-//        echo "<script>alert('同名文件已经存在了');window.location.href='index.php';</script>";exit;
-//    }
-//    if(!move_uploaded_file ($filename, $destination)){
-//        echo "<script>alert('移动文件出错');</script>";exit;
+//        echo "<script>alert('同名文件已经存在了');window.location.href='index_device-width.php';</script>";exit;
 //    }
 
     //增加排行榜小图片截图
@@ -92,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta http-equiv="Expires" content="-1">
     <meta http-equiv="pragram" content="no-cache">
-    <link rel="stylesheet" href="css/comv2.css?20150615"/>
+    <link rel="stylesheet" href="css/comv2.css?20150616"/>
     <script src="jquery.js" type="text/javascript"></script>
     <script src="sapp.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -139,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     </div>
     <div class="wrap wrap2">
         <img class="btn upload" src="img/btn2.png"/>
-        <form enctype="multipart/form-data" method="post" name="upform"><input id="uploadInput" name="upfile" type="file"  capture="camera" accept="image/*" class="chuan btn" onchange="upform.submit()" /></form>
+        <form enctype="multipart/form-data" method="post" name="upform"><input id="uploadInput" name="upfile" type="file" capture="camera" class="chuan btn" onchange="upform.submit()" /></form>
     </div>
 
     <script type="text/javascript">
@@ -271,9 +279,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         <a class="btn btn6"><img src="img/btn14.png" alt=""/></a>
         <a class="btn btn7"><img src="img/btn12.png" alt=""/></a>
-        <a class="btn btn8"><img src="img/btn15.png" alt=""/></a>
+        <!--  <a class="btn btn8"><img src="img/btn15.png" alt=""/></a>  -->
 
-        <img class="tip tip5" src="img/tip6.png" alt=""/>
+        <img class="tip tip5" src="img/tip6_noArrow.png" alt=""/>
         <div class="tip tip6">
             <a class="btn btn9"><img src="img/btn18.png" alt=""/></a>
         </div>
@@ -302,9 +310,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         <a class="btn btn6"><img src="img/btn14.png" alt=""/></a>
         <a class="btn btn7"><img src="img/btn12.png" alt=""/></a>
-        <a class="btn btn8"><img src="img/btn15.png" alt=""/></a>
+        <!--  <a class="btn btn8"><img src="img/btn15.png" alt=""/></a>  -->
         <!--  <a class="btn btn4"><img src="img/btn10.png" alt=""/></a>  -->
-        <img class="tip tip5" src="img/tip6.png" alt=""/>
+        <img class="tip tip5" src="img/tip6_noArrow.png" alt=""/>
         <div class="tip tip6">
             <a class="btn btn9"><img src="img/btn18.png" alt=""/></a>
         </div>
@@ -699,6 +707,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $('.t10').hide();
             $('.t11').show();
         }
+
         /**参数说明：
          * 根据长度截取先使用字符串，超长部分追加…
          * str 对象字符串
