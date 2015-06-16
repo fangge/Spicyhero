@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Created by MrF.
  * Date: 2015/6/8
@@ -577,7 +577,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $.ajax({
                 type:"GET",
                 dataType:"json",
-                url:service_url+"submit_person.ashx?data="+encodeURIComponent(data),
+                url:service_url+"submit_person.ashx?data="+encodeURIComponent(data)+"&from=SuperFriday",
                 success:function(data){
                     $('.login').removeClass('on');
                     if(data != null){
@@ -627,7 +627,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     $('.t9').html("可刷颜值次数：<span>"+canCheckChancesNew+"</span>");
                     $('.t3').text(personFaceRanking);
                     $('.t2').text(s+"排名:"+schoolFaceRanking);
-                    $('#school_name').text(s);
+                    $('#school_name').text(cutString(s,14));
                     $('#person_face_value_total').text(personFaceValueTotal);
                     //storage.setItem("personFaceValueTotalLocal",personFaceValueTotal);
                     localStorage.personFaceValueTotalLocal = personFaceValueTotal;
